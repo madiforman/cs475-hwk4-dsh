@@ -12,4 +12,4 @@ typedef enum {
  * @param cmd
  * @return positive code if true, CMD_EXT otherwise
  */
-cmd_t chkBuiltin(char *cmd);
+cmd_t chk_builtin(char *cmd);
