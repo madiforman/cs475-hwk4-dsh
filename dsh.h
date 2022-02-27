@@ -12,7 +12,7 @@
 void find_motd();
 /************* Functions used to parse and launch commands *************/
 void parse_command(char *cmd, char *parsed[]);
-void dsh_launch(char **args);
+int dsh_launch(char **args);
 void absolute(char **input);
 void relative(char *input);
 /************* Fucntions used to find paths of relative commands *************/

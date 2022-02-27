@@ -92,24 +92,25 @@ void parse_command(char *cmd, char *parsed[])
  *
  * @param args char array parsed from parse_command()
  */
-void dsh_launch(char **args)
+int dsh_launch(char **args)
 {
     pid_t cpid = fork();
 
     if (cpid == 0)
     {
-        execvp(args[0], args);
-
-        // if (flag < 0)
-        // {
-        //     printf("Error forking. Please try again.\n");
-        // }
+        int flag = execvp(args[0], args);
+        if (flag < 0)
+        {
+            printf("%s: cannot access '%s': No such file or directory\n", args[0], args[1]);
+            return 0;
+        }
     }
     if (!bckgrnd_flag)
     {
         int status;
         waitpid(cpid, &status, 0);
     }
+    return 1;
 }
 /**
  * @brief absolute() checks if a command is accessible, if it is it calls dsh_launch along with any arguments
@@ -147,15 +148,16 @@ int is_absolute(char *input)
  */
 void relative(char *input)
 {
-    char c = '/';
-    char cwd[MAXBUF];
+    // char c = '/';
+    // char cwd[MAXBUF];
 
-    getcwd(cwd, sizeof(cwd)); // first check to see if path to relative is in cwd
-    strncat(cwd, &c, 1);
-    strcat(cwd, input);
-    char *check_cwd[MAXBUF];
-    parse_command(cwd, check_cwd);
-    dsh_launch(check_cwd); // if launch executes execv will be called and other code will be ignored
+    // getcwd(cwd, sizeof(cwd)); // first check to see if path to relative is in cwd
+    // strncat(cwd, &c, 1);
+    // strcat(cwd, input);
+    // char *check_cwd[MAXBUF];
+    // parse_command(cwd, check_cwd);
+    // //this line is commented out because when running in the background, it is causing my output to be
+    // // dsh_launch(check_cwd); // if launch executes execv will be called and other code will be ignored
 
     char *args[MAXBUF]; // else its not in the cwd and we have to find its path if it exists
     parse_command(input, args);

@@ -24,34 +24,40 @@ int main(int argc, char **argv)
         printf("dsh> ");
         fgets(cmd, sizeof(cmd), stdin);
         cmd[strcspn(cmd, "\n")] = 0; // remove new line character
-
-        update_history(cmd, history_list, cmd_count); // update history
-        cmd_count++;                                  // update history size
-        if (!is_absolute(cmd) && !is_builtin(cmd))    // if not absolute or builtin run relative
+        if (cmd == NULL)
         {
-            relative(cmd);
+            ;
         }
         else
         {
-            parse_command(cmd, args); // else parse the command
-            if (is_builtin(args[0]))
+            update_history(cmd, history_list, cmd_count); // update history
+            cmd_count++;                                  // update history size
+            if (!is_absolute(cmd) && !is_builtin(cmd))    // if not absolute or builtin run relative
             {
-                if (strcmp(args[0], "exit") == 0)
-                {
-                    return 0; // check for exit
-                }
-                else if (strcmp(args[0], "history") == 0) // check for history
-                {
-                    for (int i = 0; i < cmd_count; i++)
-                    {
-                        printf("%s\n", history_list[i]);
-                    }
-                }
-                builtin_handler(args); // else use builtin handler
+                relative(cmd);
             }
-            else if (is_absolute(args[0])) // else its an absolute path
+            else
             {
-                absolute(args); // run it
+                parse_command(cmd, args); // else parse the command
+                if (is_builtin(args[0]))
+                {
+                    if (strcmp(args[0], "exit") == 0)
+                    {
+                        return 0; // check for exit
+                    }
+                    else if (strcmp(args[0], "history") == 0) // check for history
+                    {
+                        for (int i = 0; i < cmd_count; i++)
+                        {
+                            printf("%s\n", history_list[i]);
+                        }
+                    }
+                    builtin_handler(args); // else use builtin handler
+                }
+                else if (is_absolute(args[0])) // else its an absolute path
+                {
+                    absolute(args); // run it
+                }
             }
         }
     }
