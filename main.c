@@ -26,7 +26,7 @@ int main(int argc, char **argv)
         cmd[strcspn(cmd, "\n")] = 0; // remove new line character
         if (cmd == NULL)
         {
-            ;
+            continue;
         }
         else
         {

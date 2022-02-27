@@ -256,10 +256,17 @@ void my_pwd()
  */
 void my_cd(char *dest)
 {
-    int flag = chdir(dest);
-    if (flag != 0)
+    if (dest == NULL)
     {
-        printf("dsh: No such file or directory.\n");
+        chdir(getenv("HOME"));
+    }
+    else
+    {
+        int flag = chdir(dest);
+        if (flag != 0)
+        {
+            printf("dsh: No such file or directory.\n");
+        }
     }
 }
 /**
