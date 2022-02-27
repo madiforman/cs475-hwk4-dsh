@@ -1,10 +1,5 @@
-/*
- * main.c
- *
- *  Created on: Mar 17 2017
- *      Author: david
- */
-
+/* dsh.c Unix Shell in C
+ * Author: Madison Forman | Version: 2/26/22 */
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -14,62 +9,44 @@
 
 int main(int argc, char **argv)
 {
-   // printf("lol\n");
-    return dsh_loop();
-    //char cmd[] = "ls -l";
-   // relative(cmd);
-   // my_pwd();
-//    if(access(cmd, F_OK|X_OK)==0) {
-//        printf("yay\n");
-//    }
-    //absolute(cmd);
-    //relative("ls -a");
-    //char *path = "..";
-   // my_cd(path);
-    // char **agrs = get_paths(cmd);
-    // for(int i = 0; i < sizeof(agrs);i++){
-    //     printf("main: %s\n", agrs[i]);
-    // }
+    find_motd(); // print motd
+    char cmd[MAXBUF], *history_list[HISTORY_LEN];
+    int cmd_count = 0;
+    while (1)
+    {
+        printf("dsh> ");
+        fgets(cmd, sizeof(cmd), stdin);
+        cmd[strcspn(cmd, "\n")] = 0; // remove new line character
 
-/*
-while(1){
-    if .dsh_motd exists {
-        print
-    } else {
-        get line of input;
-        if(input[0]=='/)
+        update_history(cmd, history_list, cmd_count); // update history
+        cmd_count++;                                  // update history size
+        if (!is_absolute(cmd) && !is_builtin(cmd))
         {
-             if path to file exists
-            {
-                 dsh_launch();
-            } else
-            {
-                print error;
-                restart loop;
-            }
-        }else 
-        {
-          if(input is builtin)
-          {
-              run command
-              restart loop
-          }  else {
-              split $PATH on ':'
-              while(more paths)
-                concatenate next path with command
-              if(pathto file exists)
-              {
-                  dsh_launch
-                  restart loop
-              }
-          }
+            relative(cmd);
         }
+        else
+        {
+            char **args = parse_command(cmd);
+            if (is_builtin(args[0]))
+            {
+                if (strcmp(args[0], "exit") == 0)
+                {
+                    return 0;
+                }
+                else if (strcmp(args[0], "history") == 0)
+                {
+                    for (int i = 0; i < cmd_count; i++)
+                    {
+                        printf("%s\n", history_list[i]);
+                    }
+                }
+                builtin_handler(args);
+            }
+            else if (is_absolute(args[0]))
+            {
+                absolute(args);
+            }
+        }
+        // printf("\n");
     }
-
-
-}
-*/
-
-   
-
 }

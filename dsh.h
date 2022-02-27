@@ -8,8 +8,8 @@
 #define MAXBUF 256
 #define HISTORY_LEN 100
 
-int find_motd();
-int is_background(char command[]);
+void find_motd();
+int is_background(char *cmd);
 char **parse_command(char *cmd);
 
 void dsh_launch(char **args);
@@ -19,13 +19,12 @@ int relative(char *input);
 char **get_paths(char *token);
 
 int check_paths(char *cmd);
-char *concat(char *str1, char *str2);
 
-int is_builtin(char *cmd);
-int my_pwd();
-int my_cd(char *input);
+void my_pwd();
+void my_cd(char *input);
 int my_exit();
-int dsh_loop();
 void builtin_handler(char **args);
+int is_builtin(char *cmd);
+
+void update_history(char *cmd, char *history[], int size);
 int is_absolute(char *args);
-// TODO: Your function prototypes below
